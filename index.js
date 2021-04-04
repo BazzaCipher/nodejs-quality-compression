@@ -59,18 +59,23 @@ app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
     fs.writeFileSync(fp, req.file.buffer, /*{ encoding: ext }*/)
 
     // Places file at fpa
-    imagemin(fp, fpa, {
+    imagemin([fp], {
+        destination: fpa,
         use: [
             pngP(),
             jpegP()
         ]
     })
 
+    // Upload to physical storage
     storage.upload(fpa, {
         destination: `images/${req.firebaseUserId}/i/${fna}`, 
     })
 
+    // Update in photo collection
     db.collection('users').doc(req.firebaseUserId).set({[now]: fpa}, {merge: true})
+
+    // Return random foodimal
 
     res.end()
 })
