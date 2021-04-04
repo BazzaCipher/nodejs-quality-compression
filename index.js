@@ -60,16 +60,16 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
     fs.writeFileSync(fp, req.body /*{ encoding: ext }*/)
 
     // Places file at fpa
-    await imagemin([fp], {
+    let data = await imagemin([fp], {
         destination: 'build',
-        use: [
+        plugins: [
             pngP(),
             jpegP()
         ]
     })
 
     // Upload to physical storage
-    storage.upload(fpa, {
+    storage.upload(data[2], {
         destination: `images/${req.firebaseUserId}/i/${fn}`, 
     })
 
