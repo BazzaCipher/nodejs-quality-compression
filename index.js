@@ -6,6 +6,7 @@ const multer = require('multer')
 const fs = require('fs')
 const auth = require('./token')
 const imagemin = require('imagemin')
+const crypto = require('crypto')
 
 // Initialise firebase
 firebase.initializeApp({
@@ -66,7 +67,7 @@ app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
     })
 
     storage.upload(fpa, {
-        destination: `images/${req.firebaseUserId}/i/${fpa}`, 
+        destination: `images/${req.firebaseUserId}/i/${fna}`, 
     })
 
     db.collection('users').doc(req.firebaseUserId).set({[now]: fpa}, {merge: true})
