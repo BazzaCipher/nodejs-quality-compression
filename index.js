@@ -53,16 +53,15 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
     // const ext = req.file.mimetype.split('/').pop()
     const ext = 'imagefile'
     const fn = crypto.createHash('md5').update(req.firebaseUserId + Date.now()).digest('hex')
-    const fna = crypto.createHash('md5').update(req.firebaseUserId + ext + Date.now()).digest('hex')
     const fp = `./temp/${fn}.${ext}`
-    const fpa = `./temp/${fna}.${ext}`
+    const fpa = `./temp/build/${fn}.${ext}`
     const now = `photos.${Date.now()}`
     
     fs.writeFileSync(fp, req.body /*{ encoding: ext }*/)
 
     // Places file at fpa
     await imagemin([fp], {
-        destination: fpa,
+        destination: 'build',
         use: [
             pngP(),
             jpegP()
