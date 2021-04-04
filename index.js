@@ -7,7 +7,9 @@ app.enable('trust proxy')
 
 app.get('/', (_, res) => {res.end("Success")})
 
-app.post('/')
+app.post('/', (req, res) => {
+
+})
 
 // Heroku sets the PORT environment variable
 app.listen(process.env.PORT || 3000)
