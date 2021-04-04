@@ -37,7 +37,7 @@ app.get('/', (_, res) => {
 app.options('/', (req, res) => {
     res.set('Access-Control-Request-Method', 'GET, POST')
     res.set('Access-Control-Allow-Origin', 'https://new-super-mario-bros-2.vercel.app')
-    res.set('Access-Control-Allow-Headers', 'X-Firebase-Token')
+    res.set('Access-Control-Allow-Headers', 'X-Firebase-Token, Content-Type')
     res.send()
 })
 
