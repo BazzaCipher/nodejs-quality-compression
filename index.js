@@ -70,10 +70,10 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
 
     // Upload to physical storage
     storage.upload(fpa, {
-        destination: `images/${req.firebaseUserId}/i/${fna}`, 
+        destination: `images/${req.firebaseUserId}/i/${fn}`, 
     })
 
-    db.collection('users').doc(req.firebaseUserId).set({[now]: fna}, {merge: true})
+    db.collection('users').doc(req.firebaseUserId).set({[now]: fn}, {merge: true})
 
     // Return random foodimal
 
