@@ -7,11 +7,6 @@ const { writeFileSync } = require('fs')
 // the data from the env var to a file.
 writeFileSync("/app/creds.json", process.env.GOOGLE_CREDENTIALS, 'utf8')
 
-firebase.initializeApp({
-    credential: firebase.credential.applicationDefault(),
-    databaseURL: 'https://hackiethon-food-photo-journal.firebaseio.com'
-});
-
 // Firebase token verification function
 // Usage: app.get('/', verifyToken, (req, res) => {...})
 // Adds the property firebaseUserId to req, as this is used as the DB key
