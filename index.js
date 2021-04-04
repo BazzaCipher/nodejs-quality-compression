@@ -73,9 +73,18 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
         destination: `image/${req.firebaseUserId}/i/${fn}`, 
     })
 
-    db.collection('users').doc(req.firebaseUserId).update(new firestore.FieldPath('photos', now.toString()), fn)
+    db.collection('users').doc(req.firebaseUserId).update(
+        new firestore.FieldPath('photos', now.toString()),
+        fn,
+    )
 
-    // Return random foodimal
+    let data = await db.collection('users').doc(req.firebaseUserId).get()
+    let foodimals = data.get('foodimals') || []
+    let randomFoodimal = Math.floor(Math.random() * 16)
+    if (!foodimals.includes(randomFoodimal)) {
+        foodimals.push(randomFoodimal)
+    }
+    await db.collection('users').doc(req.firebaseUserId).update({ foodimals })
 
     res.end()
 })
