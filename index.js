@@ -69,7 +69,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
 
     // Upload to physical storage
     storage.upload(data[0].destinationPath, {
-        destination: `images/${req.firebaseUserId}/i/${fn}`, 
+        destination: `image/${req.firebaseUserId}/i/${fn}`, 
     })
 
     db.collection('users').doc(req.firebaseUserId).set({[now]: fn}, {merge: true})
