@@ -42,7 +42,7 @@ app.options('/', (req, res) => {
 })
 
 // app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
-app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), (req, res) => {
+app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res) => {
     // Uploaded file is req.file
     // https://github.com/expressjs/multer#file-information
     console.log(req.statusCode)
@@ -61,7 +61,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), (req, res) => {
     fs.writeFileSync(fp, req.body /*{ encoding: ext }*/)
 
     // Places file at fpa
-    imagemin([fp], {
+    await imagemin([fp], {
         destination: fpa,
         use: [
             pngP(),
