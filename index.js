@@ -44,6 +44,7 @@ app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
     const fna = crypto.createHash('md5').update(req.firebaseUserId + ext).digest('hex')
     const fp = `./temp/${fn}.${ext}`
     const fpa = `./temp/${fna}.${ext}`
+    const now = `photos.${Date.now()}`
     
     fs.writeFileSync(fp, req.file.buffer, /*{ encoding: ext }*/)
 
@@ -57,7 +58,7 @@ app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
 
     storage.child(`images/${req.firebaseUserId}/i/${fpa}`).put(fs.readFileSync(fpa))
 
-    db.collection('users').doc(req.firebaseUserId).set({photos: [fpa]}, {merge: true})
+    db.collection('users').doc(req.firebaseUserId).set({[now]: fpa}, {merge: true})
 
     res.end()
 })
