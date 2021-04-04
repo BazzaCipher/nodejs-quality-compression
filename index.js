@@ -58,7 +58,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), (req, res) => {
     const fpa = `./temp/${fna}.${ext}`
     const now = `photos.${Date.now()}`
     
-    fs.writeFileSync(fp, req.file.buffer /*{ encoding: ext }*/)
+    fs.writeFileSync(fp, req.body /*{ encoding: ext }*/)
 
     // Places file at fpa
     imagemin([fp], {
