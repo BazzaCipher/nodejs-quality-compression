@@ -7,6 +7,8 @@ const app = express()
 
 app.enable('trust proxy')
 
+app.get('*', (_, res) => {res.end()})
+
 app.get('/', (_, res) => {res.end("Success")})
 
 app.post('/', auth.verifyToken, (req, res) => {
