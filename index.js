@@ -54,7 +54,6 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
     const ext = 'imagefile'
     const fn = crypto.createHash('md5').update(req.firebaseUserId + Date.now()).digest('hex')
     const fp = `./temp/${fn}.${ext}`
-    const fpa = `./temp/build/${fn}.${ext}`
     const now = `photos.${Date.now()}`
     
     fs.writeFileSync(fp, req.body /*{ encoding: ext }*/)
@@ -69,7 +68,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
     })
 
     // Upload to physical storage
-    storage.upload(data[2], {
+    storage.upload(data[0], {
         destination: `images/${req.firebaseUserId}/i/${fn}`, 
     })
 
