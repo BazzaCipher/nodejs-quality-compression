@@ -68,6 +68,8 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
             jpegP()
         ]
     })
+    .then(() => console.log('Success on conversion'))
+    .catch(() => console.log('Error when converting'))
 
     // Upload to physical storage
     storage.upload(fpa, {
