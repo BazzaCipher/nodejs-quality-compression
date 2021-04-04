@@ -6,6 +6,8 @@ const app = express()
 
 app.get('/', (_, res) => {res.end("Success")})
 
-app.post('/')
+app.post('/', (req, res) => {
 
-app.listen(3000)
+})
+
+app.listen(80)
