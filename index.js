@@ -61,18 +61,22 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), (req, res) => {
     fs.writeFileSync(fp, req.body, /*{ encoding: ext }*/)
 
     // Places file at fpa
-    imagemin(fp, fpa, {
+    imagemin([fp], {
+        destination: fpa,
         use: [
             pngP(),
             jpegP()
         ]
     })
 
+    // Upload to physical storage
     storage.upload(fpa, {
         destination: `images/${req.firebaseUserId}/i/${fna}`, 
     })
 
     db.collection('users').doc(req.firebaseUserId).set({[now]: fna}, {merge: true})
+
+    // Return random foodimal
 
     res.end()
 })
