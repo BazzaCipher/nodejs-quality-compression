@@ -41,7 +41,8 @@ app.options('/', (req, res) => {
     res.send()
 })
 
-app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
+// app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
+app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), (req, res) => {
     // Uploaded file is req.file
     // https://github.com/expressjs/multer#file-information
     console.log(req.statusCode)
@@ -49,14 +50,15 @@ app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
 
     res.set('Access-Control-Allow-Origin', 'https://new-super-mario-bros-2.vercel.app')
 
-    const ext = req.file.mimetype.split('/').pop()
-    const fn = crypto.createHash('md5').update(req.firebaseUserId).digest('hex')
-    const fna = crypto.createHash('md5').update(req.firebaseUserId + ext).digest('hex')
+    // const ext = req.file.mimetype.split('/').pop()
+    const ext = 'imagefile'
+    const fn = crypto.createHash('md5').update(req.firebaseUserId + Date.now()).digest('hex')
+    const fna = crypto.createHash('md5').update(req.firebaseUserId + ext + Date.now()).digest('hex')
     const fp = `./temp/${fn}.${ext}`
     const fpa = `./temp/${fna}.${ext}`
     const now = `photos.${Date.now()}`
     
-    fs.writeFileSync(fp, req.file.buffer, /*{ encoding: ext }*/)
+    fs.writeFileSync(fp, req.body, /*{ encoding: ext }*/)
 
     // Places file at fpa
     imagemin(fp, fpa, {
@@ -70,7 +72,7 @@ app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
         destination: `images/${req.firebaseUserId}/i/${fna}`, 
     })
 
-    db.collection('users').doc(req.firebaseUserId).set({[now]: fpa}, {merge: true})
+    db.collection('users').doc(req.firebaseUserId).set({[now]: fna}, {merge: true})
 
     res.end()
 })
