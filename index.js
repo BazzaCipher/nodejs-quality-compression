@@ -33,11 +33,19 @@ app.get('/', (_, res) => {
     res.end("Success")
 })
 
+app.options('/', (req, res) => {
+    res.set('Access-Control-Request-Method', 'GET, POST')
+    res.set('Access-Control-Allow-Origin', 'https://new-super-mario-bros-2.vercel.app')
+    res.send()
+})
+
 app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
     // Uploaded file is req.file
     // https://github.com/expressjs/multer#file-information
     console.log(req.statusCode)
     console.log(req.body)
+
+    res.set('Access-Control-Allow-Origin', 'https://new-super-mario-bros-2.vercel.app')
 
     const ext = req.file.mimetype.split('/').pop()
     const fn = crypto.createHash('md5').update(req.firebaseUserId).digest('hex')
