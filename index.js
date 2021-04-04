@@ -72,7 +72,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
         destination: `image/${req.firebaseUserId}/i/${fn}`, 
     })
 
-    db.collection('users').doc(req.firebaseUserId).set({[now]: fn}, {merge: true})
+    db.collection('users').doc(req.firebaseUserId).set({[now]: fn}, {mergeFields: true})
 
     // Return random foodimal
 
