@@ -56,9 +56,9 @@ app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
         ]
     })
 
-    storage
-        .child(`images/${req.firebaseUserId}/i/${fpa}`)
-        .put(fs.readFileSync(fpa))
+    storage.upload(fpa, {
+        destination: `images/${req.firebaseUserId}/i/${fpa}`, 
+    })
 
     db.collection('users').doc(req.firebaseUserId).set({[now]: fpa}, {merge: true})
 
