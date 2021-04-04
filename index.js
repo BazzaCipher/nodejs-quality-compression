@@ -78,8 +78,8 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
         fn,
     )
 
-    let data = await db.collection('users').doc(req.firebaseUserId).get()
-    let foodimals = data.get('foodimals') || []
+    let ndata = await db.collection('users').doc(req.firebaseUserId).get()
+    let foodimals = ndata.get('foodimals') || []
     let randomFoodimal = Math.floor(Math.random() * 16)
     if (!foodimals.includes(randomFoodimal)) {
         foodimals.push(randomFoodimal)
