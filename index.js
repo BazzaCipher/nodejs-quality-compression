@@ -68,7 +68,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
     })
 
     // Upload to physical storage
-    storage.upload(data[0], {
+    storage.upload(data[0].destinationPath, {
         destination: `images/${req.firebaseUserId}/i/${fn}`, 
     })
 
