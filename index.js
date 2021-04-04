@@ -7,6 +7,7 @@ const fs = require('fs')
 const auth = require('./token')
 const imagemin = require('imagemin')
 const crypto = require('crypto')
+const { firestore } = require('firebase-admin')
 
 // Initialise firebase
 firebase.initializeApp({
@@ -72,7 +73,11 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
         destination: `image/${req.firebaseUserId}/i/${fn}`, 
     })
 
-    db.collection('users').doc(req.firebaseUserId).set({[now]: fn}, {mergeFields: true})
+    db.collection('users').doc(req.firebaseUserId).update({
+        photos: {
+          [Date.now()]: fn
+        }  
+      }, {merge: true})
 
     // Return random foodimal
 
