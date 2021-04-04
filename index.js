@@ -55,7 +55,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
     const ext = 'imagefile'
     const fn = crypto.createHash('md5').update(req.firebaseUserId + Date.now()).digest('hex')
     const fp = `./temp/${fn}.${ext}`
-    const now = `photos.${Date.now()}`
+    const now = Date.now()
     
     fs.writeFileSync(fp, req.body /*{ encoding: ext }*/)
 
@@ -73,11 +73,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
         destination: `image/${req.firebaseUserId}/i/${fn}`, 
     })
 
-    db.collection('users').doc(req.firebaseUserId).update({
-        photos: {
-          [Date.now()]: fn
-        }  
-      }, {merge: true})
+    db.collection('users').doc(req.firebaseUserId).update(new firestore.FieldPath('photos', now), fn)
 
     // Return random foodimal
 
