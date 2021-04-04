@@ -14,7 +14,7 @@ firebase.initializeApp({
 });
 
 const app = express()
-const storage = firebase.storage().ref()
+const storage = firebase.storage().bucket('gs://hackiethon-food-photo-journal.appspot.com')
 const db = firebase.firestore()
 const upload = multer({
     limits: {
@@ -56,7 +56,9 @@ app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
         ]
     })
 
-    storage.child(`images/${req.firebaseUserId}/i/${fpa}`).put(fs.readFileSync(fpa))
+    storage
+        .child(`images/${req.firebaseUserId}/i/${fpa}`)
+        .put(fs.readFileSync(fpa))
 
     db.collection('users').doc(req.firebaseUserId).set({[now]: fpa}, {merge: true})
 
