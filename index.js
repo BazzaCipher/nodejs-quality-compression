@@ -1,13 +1,13 @@
+const crypto = require('crypto')
+const fs = require('fs')
+
+const express = require('express')
 const firebase = require('firebase-admin')
+const imagemin = require('imagemin')
 const jpegP = require('imagemin-jpegtran')
 const pngP = require('imagemin-pngquant')
-const express = require('express')
-const multer = require('multer')
-const fs = require('fs')
+
 const auth = require('./token')
-const imagemin = require('imagemin')
-const crypto = require('crypto')
-const { firestore } = require('firebase-admin')
 
 // Initialise firebase
 firebase.initializeApp({
@@ -18,12 +18,6 @@ firebase.initializeApp({
 const app = express()
 const storage = firebase.storage().bucket('gs://hackiethon-food-photo-journal.appspot.com')
 const db = firebase.firestore()
-const upload = multer({
-    limits: {
-        // Limit images to 10MB to prevent denial of service
-        fieldSize: 10 * 1024 * 1024
-    }
-})
 
 // Create temporary folder to hold files in conversion and compression states
 fs.mkdirSync('./temp')
@@ -35,17 +29,14 @@ app.get('/', (_, res) => {
     res.end("Success")
 })
 
-app.options('/', (req, res) => {
+app.options('/', (_, res) => {
     res.set('Access-Control-Request-Method', 'GET, POST')
     res.set('Access-Control-Allow-Origin', 'https://new-super-mario-bros-2.vercel.app')
     res.set('Access-Control-Allow-Headers', 'X-Firebase-Token, Content-Type')
     res.send()
 })
 
-// app.post('/', auth.verifyToken, upload.single('image'), (req, res) => {
 app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res) => {
-    // Uploaded file is req.file
-    // https://github.com/expressjs/multer#file-information
     console.log(req.statusCode)
     console.log(req.body)
 
@@ -74,7 +65,7 @@ app.post('/', auth.verifyToken, express.raw({ limit: "10MB" }), async (req, res)
     })
 
     db.collection('users').doc(req.firebaseUserId).update(
-        new firestore.FieldPath('photos', now.toString()),
+        new firebase.firestore.FieldPath('photos', now.toString()),
         fn,
     )
 
